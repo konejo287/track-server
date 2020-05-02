@@ -13,14 +13,6 @@ router.get('/games', async (req, res) => {
     res.send(games);
 });
 
-router.get('/gameTopicList', async (req, res) => {
-    const { gameId } = req.query;
-    console.log('node gameTopicList id: ', gameId);
-    const games = await Game.findOne({_id: gameId});
-    console.log('getting the games topics: ', games);
-    res.send(games);
-});
-
 router.post('/game', async (req , res) => {
     const { title } = req.body;
 
@@ -39,13 +31,21 @@ router.post('/game', async (req , res) => {
     
 })
 
+router.get('/gameTopicList', async (req, res) => {
+    const { gameId } = req.query;
+    console.log('node gameTopicList id: ', gameId);
+    const games = await Game.findOne({_id: gameId});
+    console.log('getting the games topics: ', games);
+    res.send(games);
+});
+
 router.put('/addgameTopic' , async (req , res) => {
     const { topicTitle, gameId } = req.body;
     const topicInfo = { title: topicTitle, content: ''};
 
     try {
         console.log('the topicTitle is: ' , topicTitle, gameId);
-        Game.findOneAndUpdate({_id: gameId}, { $push: { topics: topicInfo  } }, {new: true}, function(err, gameTopics) {
+        Game.findOneAndUpdate({_id: gameId}, { $push: { topics: topicInfo  }, $set: { changed: true } }, {new: true}, function(err, gameTopics) {
             console.log('getting addgameTopic new topics: ', gameTopics);
             res.send(gameTopics);
         });

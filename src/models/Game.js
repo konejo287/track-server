@@ -11,7 +11,11 @@ const gameSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    topics: []
+    topics: [],
+    changed: {
+        type: Boolean,
+        required: false
+    }
 });
 
 mongoose.model('Game', gameSchema)
